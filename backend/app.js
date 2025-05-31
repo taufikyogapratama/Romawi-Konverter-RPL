@@ -31,7 +31,7 @@ app.post("/login", (req, res) => {
         }
 
         if (results.length > 0) {
-            const userId = results[0].id;
+            const userId = results[0].user_id;
             res.send({
                 pesan: "ada",
                 user_id: userId
@@ -118,13 +118,16 @@ app.post("/convert", (req, res) => {
     if (typeInput === "angka") {
         const angka = parseInt(input);
         if (angka > 3999) {
-            return res.status(400).json({ message: "Angka melebihi batas maksimal (3999)" });
+            // return res.status(400).json({ message: "Angka melebihi batas maksimal (3999)" });
+            return res.send({ message: "Angka melebihi batas maksimal (3999)" });
+
         }
         output = toRoman(angka);
     } else if (typeInput === "romawi") {
         const hasil = fromRoman(input.toUpperCase());
         if (hasil > 3999) {
-            return res.status(400).json({ message: "Angka hasil konversi melebihi batas maksimal (3999)" });
+            // return res.status(400).json({ message: "Angka hasil konversi melebihi batas maksimal (3999)" });
+            return res.send({ message: "Angka hasil konversi melebihi batas maksimal (3999)" });
         }
         output = hasil.toString();
     } else {
