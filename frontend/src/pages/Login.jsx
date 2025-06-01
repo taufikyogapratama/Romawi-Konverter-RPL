@@ -1,10 +1,11 @@
 import '../App.css'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 
 const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -21,6 +22,7 @@ const Login = () => {
 
       if (result.pesan === 'ada') {
         sessionStorage.setItem("userId", result.user_id)
+        navigate('/');
       } else {
         alert('Username atau password salah');
       }

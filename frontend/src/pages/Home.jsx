@@ -1,16 +1,25 @@
 import '../App.css'
 import Navbar from "../components/Navbar"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import swapIcon from '../assets/swap.svg'
 import closeIcon from '../assets/close.svg'
+import { useNavigate } from 'react-router-dom';
 
 const Home = () => {
+    const navigate = useNavigate();
     const [mode, setMode] = useState("Angka ke Romawi");
     const [showHistory, setShowHistory] = useState(false)
     const [input, setInputValue] = useState("");
     const [outputResult, setOutputResult] = useState("");
+    const [riwayat, setRiwayat] = useState([]);
+    const [clearStatus, setClearStatus] = useState()
 
-
+    useEffect(() => {
+        const userId = sessionStorage.getItem("userId");
+        if (!userId) {
+            navigate("/login");
+        }
+    }, [navigate]);
 
     const togleMode = () => {
         mode === "Angka ke Romawi" ? setMode("Romawi ke Angka") : setMode("Angka ke Romawi")
@@ -23,30 +32,89 @@ const Home = () => {
             setShowHistory(true)
         }
     }
+    const showRiwayat = async () => {
+        const userId = Number(sessionStorage.getItem("userId"));
+        const responseRiwayat = await fetch('http://localhost:3000/riwayat', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ userId }),
+        })
+
+        const resultRiwayat = await responseRiwayat.json();
+        if(resultRiwayat.riwayat) {
+            setRiwayat(resultRiwayat.riwayat)
+        }
+
+        console.log(riwayat)
+    }
 
     const handleSubmit = async (e) => {
         e.preventDefault(); 
         // console.log("Value input:", inputValue);
         const typeInput = mode === "Angka ke Romawi" ? "angka" : "romawi";
-        const userId = sessionStorage.getItem("userId");
+        const userId = Number(sessionStorage.getItem("userId"));
         try {
-            const response = await fetch('http://localhost:3000/convert', {
+            const responseKonversi = await fetch('http://localhost:3000/convert', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ input, typeInput, userId}),
             });
 
-            const result = await response.json();
-            if (result.output) {
-                setOutputResult(result.output);
+            const resultKonversi = await responseKonversi.json();
+            if (resultKonversi.output) {
+                setOutputResult(resultKonversi.output);
+                showRiwayat();
             } else {
-                setOutputResult(result.message);
+                setOutputResult(resultKonversi.message);
             }
         } catch (err) {
             console.error('Gagal:', err);
         }
     }
 
+    // const clearRiwayat = async (e) => {
+    //     e.preventDefault();
+    //     const userId = Number(sessionStorage.getItem("userId"));
+    //     try{
+    //         const responseClear = await fetch('http://localhost:3000/clear_riwayat', {
+    //             method: 'POST',
+    //             headers: { 'Content-Type': 'application/json' },
+    //             body: JSON.stringify({ userId }),
+    //         })
+    //         const resultResponseClear = await responseClear.json();
+    //         if(resultResponseClear.message !== "Semua riwayat berhasil dihapus"){
+    //             setClearStatus("Gagal")
+    //         }
+    //     }catch (err) {
+    //         console.error("Gagal:", err)
+    //     }
+    // }
+
+    const clearRiwayat = async () => {
+        const userId = Number(sessionStorage.getItem("userId"));
+        try{
+            const responseClear = await fetch('http://localhost:3000/clear_riwayat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ userId }),
+            });
+            const resultResponseClear = await responseClear.json();
+            if(resultResponseClear.message === "Semua riwayat berhasil dihapus"){
+                setRiwayat([]); // Kosongkan tampilan
+                setClearStatus("Berhasil");
+            } else {
+                setClearStatus("Gagal");
+            }
+        } catch (err) {
+            console.error("Gagal:", err);
+            setClearStatus("Gagal");
+        }
+    };
+
+
+    useEffect(() => {
+        showRiwayat();
+    }, []);
 
     return (
         <div data-theme="drak">
@@ -68,7 +136,7 @@ const Home = () => {
                     <p className='text-xl font-bold mb-4 ml-2 md:text-2xl'>History</p>
                 </div>
                 <div className="historys overflow-y-auto px-2 flex-1" >
-                    <div className="history1 mb-3 border p-2 rounded">
+                    {/* <div className="history1 mb-3 border p-2 rounded">
                         <p className="md:text-xl" >{"VII => 7"}</p>
                     </div>
                     <div className="history1 mb-3 border p-2 rounded">
@@ -76,10 +144,28 @@ const Home = () => {
                     </div>
                     <div className="history1 mb-3 border p-2 rounded">
                         <p className="md:text-xl" >{"VII => 7"}</p>
-                    </div>
+                    </div> */}
+
+                    {riwayat.map((item, index) => {
+                        const tanggalJam = new Date(item.tgl).toLocaleString('sv-SE', {
+                            year: 'numeric',
+                            month: '2-digit',
+                            day: '2-digit',
+                            hour: '2-digit',
+                            minute: '2-digit',
+                            hour12: false,
+                        }).replace(',', '');
+
+                        return (
+                            <div key={index} className="history1 mb-3 border p-2 rounded">
+                                <p className="md:text-xl">{`${item.input_value} => ${item.output}`}</p>
+                                <p className="text-sm text-gray-400">{tanggalJam}</p>
+                            </div>
+                        );
+                    })}
                 </div>
                 <div className="p-2">
-                    <button className='btn btn-error btn-sm w-full md:btn-md md:mb-5'>Clear</button>
+                    <button onClick={() => {confirm("Anda yakin menghapus semua riwayat anda?") ? clearRiwayat() : false}} className='btn text-white btn-error btn-sm w-full md:btn-md md:mb-5'>Clear</button>
                 </div>
             </div>
         </div>

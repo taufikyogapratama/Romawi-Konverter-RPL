@@ -1,11 +1,12 @@
 import '../App.css';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 
 const Registrasi = () => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
+    const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -29,6 +30,7 @@ const Registrasi = () => {
 
             if (result.pesan === "berhasil daftar") {
                 alert("Registrasi berhasil!");
+                navigate('/login');
             } else {
                 alert("Registrasi gagal: " + result.pesan);
             }
