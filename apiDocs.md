@@ -85,6 +85,13 @@ Response Body Error jika input tidak sesuai kriteria :
 }
 ```
 
+Response Body Error jika input melebihi batas :
+```json
+{
+    "message" : "Angka hasil konversi melebihi batas maksimal (3999)"
+}
+```
+
 ## riwayat
 Endpoint : POST /riwayat
 
