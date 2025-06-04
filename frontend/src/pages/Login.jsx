@@ -20,13 +20,11 @@ const Login = () => {
       });
 
       const result = await response.json();
-      // console.log(result);
 
       if (result.pesan === 'ada') {
         sessionStorage.setItem("userId", result.user_id)
         navigate('/');
       } else {
-        // alert('Username atau password salah');
         setErrorInput('Username atau password salah')
       }
 

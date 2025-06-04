@@ -1,17 +1,3 @@
-/*
-Login req => username, password
-Login res => ada atau tidak
-
-Register req => username, password
-Register res => berhasil jika belum ada di db
-
-Home:
-riwayat res => data riwayat
-
-convert req => type, input
-convert res => output
-*/
-
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
@@ -118,7 +104,6 @@ app.post("/convert", (req, res) => {
     if (typeInput === "angka") {
         const angka = parseInt(input);
         if (angka > 3999) {
-            // return res.status(400).json({ message: "Angka melebihi batas maksimal (3999)" });
             return res.send({ message: "Angka melebihi batas maksimal (3999)" });
 
         }
@@ -126,7 +111,6 @@ app.post("/convert", (req, res) => {
     } else if (typeInput === "romawi") {
         const hasil = fromRoman(input.toUpperCase());
         if (hasil > 3999) {
-            // return res.status(400).json({ message: "Angka hasil konversi melebihi batas maksimal (3999)" });
             return res.send({ message: "Angka hasil konversi melebihi batas maksimal (3999)" });
         }
         output = hasil.toString();

@@ -15,7 +15,6 @@ const Registrasi = () => {
 
         if (password !== confirmPassword) {
             setErrorInput("Password dan konfirmasi password harus sama.")
-            // alert("Password dan Confirm Password tidak cocok");
             return;
         }
 
@@ -32,10 +31,8 @@ const Registrasi = () => {
             console.log(result);
 
             if (result.pesan === "berhasil daftar") {
-                // alert("Registrasi berhasil!");
                 navigate('/login');
             } else {
-                // alert("Registrasi gagal: " + result.pesan);
                 setErrorInput("Akun sudah ada")
             }
 

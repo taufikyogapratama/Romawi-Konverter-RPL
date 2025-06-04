@@ -50,7 +50,6 @@ const Home = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault(); 
-        // console.log("Value input:", inputValue);
         const typeInput = mode === "Angka ke Romawi" ? "angka" : "romawi";
         const userId = Number(sessionStorage.getItem("userId"));
         try {
@@ -88,7 +87,6 @@ const Home = () => {
                 setClearStatus("Gagal");
             }
         } catch (err) {
-            // console.error("Gagal:", err);
             setClearStatus("Gagal");
         }
     };
@@ -146,7 +144,6 @@ const Home = () => {
                     <p className="py-4">Apakah anda yakin untuk menghapus semua riwayat?</p>
                     <div className="modal-action">
                     <form method="dialog">
-                        {/* if there is a button in form, it will close the modal */}
                         <button className="btn">Close</button>
                         <button className="btn ml-4" onClick={() => clearRiwayat()}>Yes</button>
                     </form>
