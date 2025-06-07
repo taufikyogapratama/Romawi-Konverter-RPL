@@ -101,7 +101,7 @@ const Home = () => {
             <Navbar fungsi={toggleHistory}/>
             <form className="w-[300px] mx-auto mt-[130px] fieldset bg-base-200 border-base-300 rounded-box border p-4 md:w-[600px]" onSubmit={handleSubmit}>
                 <label htmlFor="inputanUser" className='label mx-auto text-xl mb-3 text-white md:text-2xl' >{mode}</label>
-                <input type={mode === "Angka ke Romawi" ? "number" : "text"} pattern={mode === "Angka ke Romawi" ? "[1-9][0-9]{0,2}|1000|2000|3000" : "^M{0,3}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})$"} id="inputanUser" className='input w-full' placeholder={`Masukkan ${mode === "Angka ke Romawi" ? "Angka" : "Romawi"}`} onChange={(e) => setInputValue(e.target.value)} title={mode === "Angka ke Romawi" ? "Masukkan angka" : "Masukkan romawi"} required/>
+                <input type="text" pattern={mode === "Angka ke Romawi" ? "^(?:[1-9]|[1-9][0-9]{1,2}|[1-3][0-9]{3})$" : "^M{0,3}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})$"} id="inputanUser" className='input w-full' placeholder={`Masukkan ${mode === "Angka ke Romawi" ? "Angka" : "Romawi"}`} onChange={(e) => setInputValue(e.target.value)} title={mode === "Angka ke Romawi" ? "Masukkan angka antara 1 - 3999" : "Masukkan romawi"} required/>
                 <div className="flex justify-between items-center mt-5 px-3">
                     <input type="submit" value="Ubah" className='btn btn-sm btn-primary md:text-xl'/>
                     <img src={swapIcon} alt="Swap" onClick={togleMode} className='md:w-[30px]'/>
